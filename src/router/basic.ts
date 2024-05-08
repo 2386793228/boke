@@ -15,7 +15,7 @@ const basicRoutes: AppRouteRecordRaw[] = [
   {
     path: '/',
     name: 'Root',
-    redirect: '/login',
+    redirect: '/home',
     meta: {
       title: 'Root'
     }

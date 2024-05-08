@@ -11,7 +11,9 @@ const Home: AppRouteModule = {
   },
   props: {
     isMenu: true,
-    order: 1
+    order: 1,
+    key: 'Home',
+    label: '首页'
   },
   children: [
     {

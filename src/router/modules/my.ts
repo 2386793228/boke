@@ -11,7 +11,9 @@ const My: AppRouteModule = {
   },
   props: {
     isMenu: true,
-    order: 2
+    order: 3,
+    key: 'My',
+    label: '我的'
   },
   children: [
     {

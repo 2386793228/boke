@@ -1,10 +1,12 @@
 <!-- 顶部导航栏 -->
 <template>
   <div class="temp"></div>
-  <div class="qw-layout-header">
-    <div class="qw-layout-header-content">
-      <!-- <qw-logo size="176" /> -->
-      <ul class="qw-menu">
+  <div class="layout-header">
+    <div class="layout-header-content">
+      <span class="logo">
+        <span>云倚</span>
+      </span>
+      <ul class="menu">
         <li
           v-for="item in menus"
           :key="item.key"
@@ -12,13 +14,15 @@
           :onClick="() => handleMenuClick(item)"
           >{{ item.label }}</li
         >
+        <li>
+          <user-dropdown class="user-dropdown" />
+        </li>
       </ul>
-      <user-dropdown class="user-dropdown" />
     </div>
   </div>
 </template>
 <script lang="ts" setup name="LayoutHeader">
-  import UserDropdown from './user-drop-down.vue'
+  import userDropdown from './user-drop-down.vue'
   import { computed, onMounted } from 'vue'
   import { ref } from 'vue'
   import router from '@/router'
@@ -40,6 +44,8 @@
         return aRouteProps.order - bRouteProps.order
       })
       .map((item) => {
+        console.log(item.children)
+
         const routeProps: any = item.props.default
         return {
           key: routeProps.key,
@@ -69,39 +75,49 @@
   .temp {
     height: 48px;
   }
-  .qw-layout-header {
+  .layout-header {
     position: fixed;
     top: 0;
     z-index: 2;
     width: 100%;
     padding: 0;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.1);
-    background: #ffffff;
-    .qw-layout-header-content {
+    .layout-header-content {
       position: relative;
-      width: 1600px;
+      max-width: 1400px;
+      min-width: 960px;
+      padding: 0 32px;
       margin: auto;
       display: flex;
+      justify-content: space-between;
       line-height: 48px;
       height: 48px;
-      .qw-menu {
+      .logo {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: @text-color;
+        font-weight: 600;
+        img {
+          width: 24px;
+          height: 24px;
+          margin-right: 8px;
+        }
+      }
+      .menu {
         display: flex;
         align-items: center;
         margin-left: 32px;
         li {
-          margin-right: 12px;
-          width: 104px;
+          padding: 0 12px;
           line-height: 40px;
           border-radius: 6px 6px 6px 6px;
           text-align: center;
-          font-size: 16px;
-          color: #666666;
+          font-size: 14px;
+          color: @text-color;
           cursor: pointer;
           &:hover,
           &.active {
-            background: rgba(82, 69, 229, 0.1);
-            color: #5245e5;
+            color: @primary-color;
             font-weight: 600;
           }
         }
@@ -109,11 +125,6 @@
       .user-dropdown {
         position: absolute;
         right: 0;
-      }
-    }
-    @media (max-width: 1600px) {
-      .qw-layout-header-content {
-        width: 1200px;
       }
     }
   }

@@ -2,15 +2,11 @@
 <template>
   <a-dropdown overlay-class-name="user-dropdown">
     <span class="user">
-      <qw-icon type="user" />
       <!-- <span>{{ userInfo.username }}</span> -->
-      <qw-icon type="ic_fold" />
     </span>
     <template #overlay>
       <a-menu>
-        <a-menu-item key="logout" :onclick="handleLogout"
-          ><qw-icon type="ic_exit" /> 退出登录</a-menu-item
-        >
+        <a-menu-item key="logout" :onclick="handleLogout"> 退出登录</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>

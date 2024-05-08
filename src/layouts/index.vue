@@ -25,10 +25,10 @@
     return hideLayout
   })
 
-  const prefixCls = ref('qw-layout')
+  const prefixCls = ref('layout')
 </script>
 <style lang="less">
-  .qw-layout {
+  .layout {
     width: 100%;
     min-height: 100%;
     &-main {

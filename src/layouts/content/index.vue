@@ -1,5 +1,5 @@
 <template>
-  <div class="qw-layout-content">
+  <div class="layout-content">
     <div :class="contentClass">
       <page-content />
     </div>
@@ -12,22 +12,21 @@
   const props = defineProps(['hideLayout'])
 
   const contentClass = computed(() => {
-    return !props.hideLayout ? 'qw-layout-page-content' : ''
+    return !props.hideLayout ? 'layout-page-content' : ''
   })
 </script>
 <style lang="less" scoped>
-  .qw-layout-content {
+  .layout-content {
     position: relative;
     flex: 1 1 auto;
-    background-color: #f2f4ff;
-    .qw-layout-page-content {
+    .layout-page-content {
       width: 1600px;
       margin: auto;
       padding-bottom: 24px;
       overflow: hidden;
     }
     @media (max-width: 1600px) {
-      .qw-layout-page-content {
+      .layout-page-content {
         width: 1200px;
       }
     }
