@@ -115,6 +115,7 @@
           font-size: 14px;
           color: @text-color;
           cursor: pointer;
+          list-style: none;
           &:hover,
           &.active {
             color: @primary-color;

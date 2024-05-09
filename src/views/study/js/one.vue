@@ -1,15 +1,39 @@
 <!-- JavaScript深入之从ECMAScript规范解读this -->
 <template>
-  <div class="js-one-this">
-    <one-md />
+  <div>
+    <div class="markdown-body" v-html="htmlVal"></div>
   </div>
 </template>
 <script lang="ts" setup>
-  import oneMd from './one-md.md'
-  import 'highlight.js/styles/github.css'
-  import 'github-markdown-css'
+  import { ref, onMounted } from 'vue'
+  import { readTextFile } from '@/utils/md-config'
+  import markdownit from 'markdown-it'
+  import hljs from 'highlight.js'
+
+  const mdRef = ref('')
+  const htmlVal = ref('')
+  onMounted(async () => {
+    mdRef.value = await readTextFile('one-md.md')
+    console.log(mdRef)
+    const md = markdownit({
+      highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          try {
+            return (
+              '<pre><code class="hljs">' +
+              hljs.highlight(str, { language: lang }).value +
+              '</code></pre>'
+            )
+          } catch (e) {}
+        }
+        return ''
+      }
+    })
+    htmlVal.value = md.render(mdRef.value)
+  })
 </script>
 <style lang="less" scoped>
   .js-one-this {
+    // background: #fff;
   }
 </style>

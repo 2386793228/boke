@@ -1,4 +1,5 @@
 @import 'color.less';
+@import 'github-markdown-dark.min.css';
 
 input:-webkit-autofill {
   box-shadow: 0 0 0 1000px transparent inset;
@@ -24,7 +25,6 @@ body {
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  color: #333;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -39,6 +39,7 @@ body {
 }
 html[data-theme='dark'] {
   background: #1b1b1f;
+  // color: @text-sub-color;
 }
 ::-webkit-scrollbar {
   width: 0px;
@@ -58,13 +59,9 @@ span {
 }
 
 // 保持 和 windi 一样的全局样式，减少升级带来的影响
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
 .ant-layout {
   background: inherit !important;
+  color: inherit !important;
 }
 
 .ant-layout * {
