@@ -4,13 +4,10 @@ import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import type { Plugin, ProxyOptions } from 'vite'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend' // 为了方便devtools开发者工具查看组件自定义的name属性
-import hljs from 'highlight.js/lib/core'
-import markdownit from 'markdown-it'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import path from 'path'
-import mdConfig from './md-config'
 
 export function wrapperEnv(envConf: Recordable): ViteEnv {
   const ret: any = {}

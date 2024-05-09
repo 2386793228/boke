@@ -16,11 +16,11 @@
   import { useGo } from '@/hooks/use-page'
   import { ExclamationCircleFilled } from '@ant-design/icons-vue'
   import { Modal } from 'ant-design-vue'
-  import { computed, createVNode } from 'vue'
+  import { createVNode } from 'vue'
   const go = useGo()
-  const userInfo = computed(() => {
-    return localStorage.getItem('userInfo')
-  })
+  // const userInfo = computed(() => {
+  //   return localStorage.getItem('userInfo')
+  // })
   const handleLogout = () => {
     Modal.confirm({
       title: '退出登录',

@@ -13,9 +13,9 @@ const router = createRouter({
 
 // 路由拦截
 router.beforeEach(async (to, _from, next) => {
-  // if (!router.hasRoute(to.name as string)) {
-  //   next('/404')
-  // }
+  if (!router.hasRoute(to.name as string)) {
+    next('/404')
+  }
   // 非白名单，且用户未登录，跳转登录
   // if (!ROUTER_WHITE_LIST.includes(to.path) && !localStorage.getItem('userInfo')) {
   //   next('/login')

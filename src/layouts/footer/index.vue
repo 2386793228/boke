@@ -1,11 +1,10 @@
 <!-- 底部信息栏 -->
 <template>
   <div class="layout-footer">
-    <qw-center-frame><span class="bacode">浙ICP备2022027001号-1</span></qw-center-frame>
   </div>
 </template>
 <script lang="ts" setup name="LayoutFooter">
-  import QwCenterFrame from '@/components/QwCenterFrame.vue'
+
 </script>
 <style lang="less">
   .layout-footer {
