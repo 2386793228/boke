@@ -17,9 +17,9 @@ router.beforeEach(async (to, _from, next) => {
     next('/404')
   }
   // 非白名单，且用户未登录，跳转登录
-  // if (!ROUTER_WHITE_LIST.includes(to.path) && !localStorage.getItem('userInfo')) {
-  //   next('/login')
-  // }
+  if (!ROUTER_WHITE_LIST.includes(to.path) && !localStorage.getItem('userInfo')) {
+    next('/login')
+  }
   next()
 })
 
