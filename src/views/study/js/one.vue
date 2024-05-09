@@ -16,7 +16,7 @@
     mdRef.value = await readTextFile('one-md.md')
     console.log(mdRef)
     const md = markdownit({
-      highlight: function (str, lang) {
+      highlight: function (str: string, lang: string) {
         if (lang && hljs.getLanguage(lang)) {
           try {
             return (
