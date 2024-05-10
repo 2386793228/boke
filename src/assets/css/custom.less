@@ -58,7 +58,14 @@ span {
   outline: none;
 }
 
-// 保持 和 windi 一样的全局样式，减少升级带来的影响
+// 自定义antd样式
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
 .ant-layout {
   background: inherit !important;
   color: inherit !important;
@@ -67,9 +74,11 @@ span {
 .ant-layout * {
   box-sizing: border-box;
 }
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  user-select: none;
+.header-menu-dropdown {
+  .ant-dropdown-menu {
+    .ant-dropdown-menu-item-selected {
+      color: @bg-text-color;
+      background-color: @bg-color;
+    }
+  }
 }

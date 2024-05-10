@@ -21,7 +21,7 @@ const Study: AppRouteModule = {
       name: 'StudyJs',
       redirect: '/study/js/one',
       meta: {
-        title: 'js'
+        title: 'js基础'
       },
       children: [
         {
@@ -38,7 +38,7 @@ const Study: AppRouteModule = {
       path: 'vue',
       name: 'StudyVue',
       meta: {
-        title: 'vue'
+        title: 'vue3'
       },
       children: [
         {

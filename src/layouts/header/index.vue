@@ -10,10 +10,31 @@
         <li
           v-for="item in menus"
           :key="item.key"
-          :class="item.key === activeKey ? 'active' : ''"
+          :class="item.key === firstRouteKey ? 'active' : ''"
           :onClick="() => handleMenuClick(item)"
-          >{{ item.label }}</li
         >
+          <Dropdown
+            v-if="item.children.length"
+            :arrow="true"
+            trigger="hover"
+            overlay-class-name="header-menu-dropdown"
+          >
+            <span>{{ item.label }}</span>
+            <template #overlay>
+              <Menu :selectedKeys="[secondRouteKey]">
+                <menu-item
+                  v-for="children in item.children"
+                  :key="children.path"
+                  @click="goSecondPath(children, item.key)"
+                >
+                  <a>{{ children.label }}</a>
+                </menu-item>
+              </Menu>
+            </template>
+          </Dropdown>
+
+          <span v-else> {{ item.label }}</span>
+        </li>
         <li>
           <user-dropdown class="user-dropdown" />
         </li>
@@ -22,14 +43,25 @@
   </div>
 </template>
 <script lang="ts" setup name="LayoutHeader">
+  import { Dropdown, Menu, MenuItem } from 'ant-design-vue'
   import userDropdown from './user-drop-down.vue'
   import { computed, onMounted } from 'vue'
-  import { ref } from 'vue'
   import router from '@/router'
+  import { storeToRefs } from 'pinia'
+  import type { RouteRecordRaw } from 'vue-router'
+  import { useCommonStore } from '@/store/modules/common'
   import { useGo } from '@/hooks/use-page'
 
+  interface children<T> {
+    path: T
+    label: T
+    redirect: T
+  }
+
   const go = useGo()
-  const activeKey = ref<string>()
+  const commonStore = useCommonStore()
+
+  const { firstRouteKey, secondRouteKey } = storeToRefs(commonStore)
 
   const menus = computed(() => {
     const menuRoutes = router
@@ -44,14 +76,20 @@
         return aRouteProps.order - bRouteProps.order
       })
       .map((item) => {
-        console.log(item.children)
-
+        const childrens: children<string>[] = item!.children.map((t: RouteRecordRaw) => {
+          return {
+            path: item.path + '/' + t.path,
+            label: t.meta!.title as string,
+            redirect: t.redirect as string
+          }
+        })
         const routeProps: any = item.props.default
         return {
           key: routeProps.key,
           label: routeProps.label,
           order: routeProps.order,
-          path: item.path
+          path: item.path,
+          children: childrens.length > 1 ? childrens : []
         }
       })
     return menuRoutes
@@ -59,16 +97,26 @@
 
   onMounted(() => {
     const currentRoute = location.hash.slice(1)
+    console.log(currentRoute)
+    console.log(menus.value)
+
     const currentMenu = menus.value.find((item) => item.path.indexOf(currentRoute) !== -1)
     if (currentMenu) {
-      activeKey.value = currentMenu.key
+      commonStore.setData('firstRouteKey', currentMenu.key)
     }
   })
 
   const handleMenuClick = (menu: any) => {
     const { key, path } = menu
-    activeKey.value = key
+    if (menu.children.length < 2) {
+    }
+    commonStore.setData('firstRouteKey', key)
     go(path)
+  }
+  const goSecondPath = (children: children, firstKey: string) => {
+    commonStore.setData('firstRouteKey', firstKey)
+    commonStore.setData('secondRouteKey', children.path)
+    go(children.path)
   }
 </script>
 <style lang="less">
