@@ -84,6 +84,7 @@
     z-index: 2;
     width: 100%;
     padding: 0;
+    background: #1b1b1f;
     .layout-header-content {
       position: relative;
       max-width: 1400px;
