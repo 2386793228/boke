@@ -5,7 +5,7 @@ const Study: AppRouteModule = {
   path: '/study',
   name: 'Study',
   component: LAYOUT,
-  redirect: '',
+  redirect: '/study/js',
   meta: {
     title: '学习笔记'
   },
@@ -31,12 +31,21 @@ const Study: AppRouteModule = {
           meta: {
             title: 'this指向'
           }
+        },
+        {
+          path: 'two',
+          name: 'StudyJsTwo',
+          component: () => import('@/views/study/js/two.vue'),
+          meta: {
+            title: 'arguments绑定'
+          }
         }
       ]
     },
     {
       path: 'vue',
       name: 'StudyVue',
+      redirect: '/study/vue/one',
       meta: {
         title: 'vue3'
       },
@@ -46,7 +55,7 @@ const Study: AppRouteModule = {
           name: 'StudyVueOne',
           component: () => import('@/views/study/vue/one.vue'),
           meta: {
-            title: 'proxy'
+            title: 'vue的proxy'
           }
         }
       ]

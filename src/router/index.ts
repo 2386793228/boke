@@ -20,6 +20,7 @@ router.beforeEach(async (to, _from, next) => {
   // if (!ROUTER_WHITE_LIST.includes(to.path) && !localStorage.getItem('userInfo')) {
   //   next('/login')
   // }
+  document.title = to.meta.title as string
   next()
 })
 

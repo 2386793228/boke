@@ -4,13 +4,13 @@
   <div class="layout-header">
     <div class="layout-header-content">
       <span class="logo">
-        <span>云倚</span>
+        <span v-if="!showSidebar">云倚</span>
       </span>
       <ul class="menu">
         <li
           v-for="item in menus"
-          :key="item.key"
-          :class="item.key === firstRouteKey ? 'active' : ''"
+          :key="item.path"
+          :class="item.path === firstRouteKey ? 'active' : ''"
           :onClick="() => handleMenuClick(item)"
         >
           <Dropdown
@@ -45,77 +45,32 @@
 <script lang="ts" setup name="LayoutHeader">
   import { Dropdown, Menu, MenuItem } from 'ant-design-vue'
   import userDropdown from './user-drop-down.vue'
-  import { computed, onMounted } from 'vue'
-  import router from '@/router'
   import { storeToRefs } from 'pinia'
-  import type { RouteRecordRaw } from 'vue-router'
-  import { useCommonStore } from '@/store/modules/common'
+  import { routerChildren } from '@/models/common-model'
   import { useGo } from '@/hooks/use-page'
-
-  interface children<T> {
-    path: T
-    label: T
-    redirect: T
-  }
+  import { useCommonStore } from '@/store/modules/common'
 
   const go = useGo()
   const commonStore = useCommonStore()
 
-  const { firstRouteKey, secondRouteKey } = storeToRefs(commonStore)
+  const { menus, firstRouteKey, secondRouteKey, showSidebar } = storeToRefs(commonStore)
 
-  const menus = computed(() => {
-    const menuRoutes = router
-      .getRoutes()
-      .filter((item) => {
-        const routeProps: any = item.props.default
-        return routeProps && routeProps.isMenu
-      })
-      .sort((a, b) => {
-        const aRouteProps: any = a.props.default
-        const bRouteProps: any = b.props.default
-        return aRouteProps.order - bRouteProps.order
-      })
-      .map((item) => {
-        const childrens: children<string>[] = item!.children.map((t: RouteRecordRaw) => {
-          return {
-            path: item.path + '/' + t.path,
-            label: t.meta!.title as string,
-            redirect: t.redirect as string
-          }
-        })
-        const routeProps: any = item.props.default
-        return {
-          key: routeProps.key,
-          label: routeProps.label,
-          order: routeProps.order,
-          path: item.path,
-          children: childrens.length > 1 ? childrens : []
-        }
-      })
-    return menuRoutes
-  })
-
-  onMounted(() => {
-    const currentRoute = location.hash.slice(1)
-    console.log(currentRoute)
-    console.log(menus.value)
-
-    const currentMenu = menus.value.find((item) => item.path.indexOf(currentRoute) !== -1)
-    if (currentMenu) {
-      commonStore.setData('firstRouteKey', currentMenu.key)
-    }
-  })
-
+  // 一级导航切换
   const handleMenuClick = (menu: any) => {
     const { key, path } = menu
-    if (menu.children.length < 2) {
-    }
     commonStore.setData('firstRouteKey', key)
+    commonStore.setData('secondRouteKey', '')
+    if (menu.children.length < 2) {
+    } else {
+    }
+
     go(path)
   }
-  const goSecondPath = (children: children, firstKey: string) => {
+  // 二级导航切换
+  const goSecondPath = (children: routerChildren, firstKey: string) => {
     commonStore.setData('firstRouteKey', firstKey)
     commonStore.setData('secondRouteKey', children.path)
+    commonStore.setData('sideBarSelectKey', children.path + '/one') // 默认选中第一篇
     go(children.path)
   }
 </script>
@@ -143,7 +98,7 @@
         display: flex;
         align-items: center;
         font-size: 16px;
-        color: @text-color;
+        color: #fff;
         font-weight: 600;
         img {
           width: 24px;
@@ -161,7 +116,7 @@
           border-radius: 6px 6px 6px 6px;
           text-align: center;
           font-size: 14px;
-          color: @text-color;
+          color: #fff;
           cursor: pointer;
           list-style: none;
           &:hover,

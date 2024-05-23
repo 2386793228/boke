@@ -5,7 +5,7 @@
     <canvas id="universe" />
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts" setup name="Home">
   import { onMounted } from 'vue'
   import dark from '@/utils/universe'
 
@@ -19,7 +19,7 @@
     text-align: center;
     h1 {
       font-size: 24px;
-      color: @text-color;
+      color: #fff;
     }
     p {
       color: @text-sub-color;

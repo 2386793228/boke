@@ -1,4 +1,4 @@
-<!-- JavaScript深入之从ECMAScript规范解读this -->
+<!-- arguments绑定 -->
 <template>
   <div>
     <div class="markdown-body" v-html="htmlVal"></div>
@@ -13,7 +13,7 @@
   const mdRef = ref('')
   const htmlVal = ref('')
   onMounted(async () => {
-    mdRef.value = await readTextFile('/study/js/one.md')
+    mdRef.value = await readTextFile('/study/js/two.md')
     const md = markdownit({
       highlight: function (str: string, lang: string) {
         if (lang && hljs.getLanguage(lang)) {
@@ -31,8 +31,4 @@
     htmlVal.value = md.render(mdRef.value)
   })
 </script>
-<style lang="less" scoped>
-  .js-one-this {
-    // background: #fff;
-  }
-</style>
+<style lang="less" scoped></style>

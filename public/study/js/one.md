@@ -1,4 +1,4 @@
-# this的指向
+# 从ECMAScript规范解读this
 
 - 你好
 
