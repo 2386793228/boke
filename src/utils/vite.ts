@@ -8,6 +8,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import Markdown from 'vite-plugin-md'
+
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import path from 'path'
@@ -134,7 +135,44 @@ export function createVitePlugins(viteEnv: ViteEnv) {
       ]
     }),
     Markdown({
-      builders: md()
+      markdownItOptions: {
+        highlight: function (str: string, lang: string) {
+          if (lang && hljs.getLanguage(lang)) {
+            try {
+              return (
+                '<pre><code class="hljs">' +
+                hljs.highlight(str, { language: lang }).value +
+                '</code></pre>'
+              )
+            } catch (e) {}
+          }
+          return ''
+        }
+      },
+      markdownItSetup(md) {
+        md.renderer.rules.link_open = function (
+          tokens: any,
+          idx: number,
+          options: any,
+          _env: any,
+          self: any
+        ) {
+          const aIndex = tokens[idx].attrIndex('target')
+
+          if (aIndex < 0) {
+            tokens[idx].attrPush(['target', '_blank']) // 添加target属性
+          } else {
+            // 如果已存在target属性，确保它的值是_blank
+            const a = tokens[idx].attrs[aIndex]
+            if (a[1] !== '_blank') {
+              a[1] = '_blank'
+            }
+          }
+
+          // 调用原生link_open方法以继续渲染
+          return self.renderToken(tokens, idx, options)
+        }
+      }
     })
   ]
 
