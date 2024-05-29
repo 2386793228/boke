@@ -27,7 +27,7 @@ const Study: AppRouteModule = {
         {
           path: 'one',
           name: 'StudyJsOne',
-          component: () => import('@/views/study/js/one.vue'),
+          component: () => import('@/views/study/js/one.md'),
           meta: {
             title: 'this指向'
           }
@@ -35,7 +35,7 @@ const Study: AppRouteModule = {
         {
           path: 'two',
           name: 'StudyJsTwo',
-          component: () => import('@/views/study/js/two.vue'),
+          component: () => import('@/views/study/js/two.md'),
           meta: {
             title: 'arguments绑定'
           }
