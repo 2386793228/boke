@@ -137,9 +137,223 @@ GetValue 返回对象属性真正的值，但是要注意：
 前面讲诉的都是Reference，下面才是重点，为啥要介绍Reference呢？它与this到底有啥关系？
 
 文档的第11.2.3 Function Calls：
+
 这里讲述了当函数调用的时候，如何确定this的取值。
+
 只看第一步、第六步、第七步：
 
 > 1.Let ref be the result of evaluating MemberExpression.
 
 > 6.If Type(ref) is Reference, then
+
+> ```javascript
+>   a.If IsPropertyReference(ref) is true, then
+> ```
+
+> ```javascript
+>       i.Let thisValue be GetBase(ref).
+> ```
+
+> ```javascript
+>   b.Else, the base of ref is an Environment Record
+> ```
+
+> ```javascript
+>       i.Let thisValue be the result of calling the ImplicitThisValue concrete method of GetBase(ref).
+> ```
+
+> 7.Else, Type(ref) is not Reference.
+
+> ```javascript
+>   a. Let thisValue be undefined.
+> ```
+
+简单描述一下：
+
+1.计算MemberExpression的结果赋值给ref
+
+2.判断ref 是不是一个Reference类型
+
+```javascript
+2.1 如果 ref 是 Reference，并且 IsPropertyReference(ref) 是 true, 那么 this 的值为 GetBase(ref)
+
+2.2 如果 ref 是 Reference，并且 base value 值是 Environment Record, 那么this的值为 ImplicitThisValue(ref)
+
+2.3 如果 ref 不是 Reference，那么 this 的值为 undefined
+```
+
+## 5. 具体分析
+
+让我们一步一步看：
+
+1. 计算MemberExpression的结果赋值给ref
+
+什么是 MemberExpression? 看规范11.2 Left-Hand-Side Expression：
+
+MemberExpression：
+
+- PrimaryExpression // 原始表达式 可以参见《JavaScript权威指南第四章》
+- FunctionExpression // 函数定义表达式
+- MemberExpression [ Expression ] // 属性访问表达式
+- MemberExpression . IdentifierName // 属性访问表达式
+- new MemberExpression Arguments // 对象创建表达式
+
+举个例子
+
+```javascript
+function foo() {
+  console.log(this)
+}
+
+foo() // MemberExpression 是 foo
+
+function foo() {
+  return function () {
+    console.log(this)
+  }
+}
+
+foo()() // MemberExpression 是 foo()
+
+var foo = {
+  bar: function () {
+    return this
+  }
+}
+
+foo.bar() // MemberExpression 是 foo.bar
+```
+
+所以简单理解 MemberExpression 其实就是()左边的部分
+
+2. 判断ref是不是一个 Reference 类型。
+
+关键在于规范如何处理各种 MemberExpression，返回的结果是不是一个 Reference 类型。
+
+```javascript
+var value = 1
+
+var foo = {
+  value: 2,
+  bar: function () {
+    return this.value
+  }
+}
+
+//示例1
+console.log(foo.bar())
+//示例2
+console.log((foo.bar = foo.bar)())
+//示例3
+console.log((false || foo.bar)())
+//示例4
+console.log((foo.bar, foo.bar)())
+```
+
+### foo.bar()
+
+在示例 1 中， MemberExpression计算的结果是 foo.bar ，那么 foo.bar 是不是一个 Reference 呢？
+
+规范11.2.1中的 Property Accessors，这里展示了一个计算的过程，我们看最后一步：
+
+> Return a value of type Reference whose base value is baseValue and whose referenced name is propertyNameString, and whose strict mode flag is strict.
+
+根据计算我们得知该表达式返回了一个 Reference 类型！
+
+根据之前的内容，我们知道这个值是：
+
+```javascript
+var Reference = {
+  base: foo,
+  name: 'bar',
+  strict: false
+}
+```
+
+接下来按照2.1的判断流程走：
+
+> 2.1 如果 ref 是 Reference，并且 IsPropertyReference(ref) 是 true, 那么 this 的值为 GetBase(ref)
+
+该值是 Reference 类型， 那么IsPropertyReference(ref) 的结果是啥呢？
+
+前面我们已经铺垫了 IsPropertyReference 方法，如果 base value 是一个对象， 结果返回true。
+
+base value 为 foo, 是一个对象， 所以 IsPropertyReference(ref) 结果为 true。
+
+这个时候我们就可以确定 this 的值了：
+
+```javascript
+this = GetBase(ref)
+```
+
+GetBase 也已经铺垫了，获得 base value 的值，这个例子中就是 foo， 所以 this 的值就是 foo，示例1的结果为 2！
+
+**`知道了原理，剩下的就很快了`**
+
+### (foo.bar = foo.bar)()
+
+示例2，有赋值操作符，规范11.13.1 Simple Assignment ( = )：
+
+规范中计算的第三步：
+
+> 3.Let rval be GetValue(rref).
+
+因为使用了 GetValue, 所以返回的值不是 Reference 类型，
+
+按照之前2.3的判断逻辑
+
+> 2.3 如果 ref 不是Reference，那么 this 的值为 undefined
+
+this 为undefined， 非严格模式下，this 的值为 undefined 的时候 会隐式转换为 全局对象window，所以这里的this是window，示例2的结果为 1！
+
+### (false || foo.bar)()
+
+示例3， 逻辑与算法，查看规范 11.11 Binary Logical Operators：
+
+规范中计算的第二步：
+
+> 2.Let lval be GetValue(lref).
+
+逻辑与示例2同理
+
+### (foo.bar, foo.bar)()
+
+示例4， 逗号操作符， 查看规范11.14 Comma Operator ( , )
+
+规范中计算的第二步：
+
+> 2.Call GetValue(lref).
+
+逻辑与示例2同理
+
+### 再来个最普遍的情况：
+
+```javascript
+function foo() {
+  console.log(this)
+}
+
+foo()
+```
+
+MemberExpression 是 foo, 查看规范 10.3.1 Identifier Resolution，会返回一个 Reference 类型的值：
+
+```javascript
+var fooReference = {
+  base: EnvironmentRecord,
+  name: 'foo',
+  strict: false
+}
+```
+
+接下来进行判断
+
+> 2.1 如果 ref 是 Reference，并且 IsPropertyReference(ref) 是 true, 那么 this 的值为 GetBase(ref)
+
+因为 base value 是 EnvironmentRecord，并不是一个 Object 类型，还记得前面讲过的 base value 的取值可能吗？ 只可能是 undefined, an Object, a Boolean, a String, a Number, 和 an environment record 中的一种。
+
+IsPropertyReference(ref) 的结果为 false，进入下个判断：
+
+> 2.2 如果 ref 是 Reference，并且 base value 值是 Environment Record, 那么this的值为 ImplicitThisValue(ref)
+
+查看规范 10.2.1.1.6，ImplicitThisValue 方法的介绍：该函数始终返回 undefined。 所以this的值为undefined
