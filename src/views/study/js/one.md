@@ -288,6 +288,8 @@ this = GetBase(ref)
 
 GetBase 也已经铺垫了，获得 base value 的值，这个例子中就是 foo， 所以 this 的值就是 foo，示例1的结果为 2！
 
+**可以简单的理解为， base value 是一个对象，那么this就返回这个对象**
+
 **`知道了原理，剩下的就很快了`**
 
 ### (foo.bar = foo.bar)()
