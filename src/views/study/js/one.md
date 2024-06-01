@@ -13,6 +13,7 @@
 从ECMEScript5规范讲起
 
 [英文版](http://es5.github.io/#x15.1)
+
 [中文版](http://yanhaijing.com/es5/#115)
 
 ## 1. Types （类型）

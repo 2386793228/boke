@@ -5,7 +5,6 @@ import legacy from '@vitejs/plugin-legacy'
 import type { Plugin, ProxyOptions } from 'vite'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend' // 为了方便devtools开发者工具查看组件自定义的name属性
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import Markdown from 'vite-plugin-md'
 
