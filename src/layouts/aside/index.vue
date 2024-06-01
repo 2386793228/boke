@@ -17,7 +17,7 @@
         <menu-item
           v-for="subMenu in menu.children"
           :key="subMenu.path"
-          @click="goSecondPath(subMenu, menu)"
+          @click="goSecondPath(subMenu)"
           >{{ subMenu.label }}</menu-item
         >
       </sub-menu>
@@ -44,7 +44,7 @@
   const openKeys = toRef(secondRouteKey, 'value') // 测试响应式的代码，也可以直接页面[]
 
   // 二级导航切换
-  const goSecondPath = (children: routerChildren, menu: routerChildren) => {
+  const goSecondPath = (children: routerChildren) => {
     commonStore.setData('sideBarSelectKey', children.path)
 
     go(children.path)

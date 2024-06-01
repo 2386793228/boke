@@ -66,47 +66,6 @@ export function createProxy(list: ProxyList = []) {
   return ret
 }
 
-// markdown封装
-function md() {
-  const markdown = MarkdownIt({
-    highlight: function (str: string, lang: string) {
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          return (
-            '<pre><code class="hljs">' +
-            hljs.highlight(str, { language: lang }).value +
-            '</code></pre>'
-          )
-        } catch (e) {}
-      }
-      return ''
-    }
-  })
-  markdown.renderer.rules.link_open = function (
-    tokens: any,
-    idx: number,
-    options: any,
-    _env: any,
-    self: any
-  ) {
-    const aIndex = tokens[idx].attrIndex('target')
-
-    if (aIndex < 0) {
-      tokens[idx].attrPush(['target', '_blank']) // 添加target属性
-    } else {
-      // 如果已存在target属性，确保它的值是_blank
-      const a = tokens[idx].attrs[aIndex]
-      if (a[1] !== '_blank') {
-        a[1] = '_blank'
-      }
-    }
-
-    // 调用原生link_open方法以继续渲染
-    return self.renderToken(tokens, idx, options)
-  }
-
-  return markdown
-}
 export function createVitePlugins(viteEnv: ViteEnv) {
   const { VITE_USE_MOCK } = viteEnv
 
