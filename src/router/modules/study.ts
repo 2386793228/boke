@@ -37,7 +37,7 @@ const Study: AppRouteModule = {
           name: 'StudyJsTwo',
           component: () => import('@/views/study/js/two.md'),
           meta: {
-            title: 'arguments绑定'
+            title: 'script脚本'
           }
         }
       ]
