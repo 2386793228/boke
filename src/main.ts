@@ -5,7 +5,7 @@ import App from './App.vue'
 import { setupRouter } from './router'
 import setupStore from './store'
 
-import registerGlobComp from '@/utils/iconfont'
+// import registerGlobComp from '@/utils/iconfont'
 
 import 'highlight.js/styles/default.css'
 import 'highlight.js/styles/github-dark.css'
@@ -17,7 +17,7 @@ async function setupApp() {
 
   setupStore(app)
 
-  registerGlobComp(app)
+  // registerGlobComp(app)
 
   app.mount('#app')
 }
