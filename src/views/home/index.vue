@@ -2,6 +2,9 @@
   <div class="home">
     <h1>Welcome to yunyi's Blog</h1>
     <p>随笔记录你的美好瞬间</p>
+    <div class="bottom">
+      <a  href="http://beian.miit.gov.cn/">赣ICP备2024024117号</a>
+    </div>
     <canvas id="universe" />
   </div>
 </template>
@@ -23,6 +26,12 @@
     }
     p {
       color: @text-sub-color;
+    }
+    .bottom {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      right: 0;
     }
   }
   #universe {
