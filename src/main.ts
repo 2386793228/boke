@@ -1,9 +1,11 @@
 import { createApp } from 'vue'
 import './assets/css/custom.less'
 
+import 'virtual:svg-icons-register'
 import App from './App.vue'
 import { setupRouter } from './router'
 import setupStore from './store'
+import svgIcon from './components/svgIcon'
 
 // import registerGlobComp from '@/utils/iconfont'
 
@@ -18,7 +20,7 @@ async function setupApp() {
   setupStore(app)
 
   // registerGlobComp(app)
-
+  app.use(svgIcon)
   app.mount('#app')
 }
 
